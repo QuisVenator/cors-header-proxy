@@ -8,70 +8,10 @@ export default {
 
 		// The URL for the remote third party API you want to fetch from
 		// but does not implement CORS
-		const API_URL = "https://examples.cloudflareworkers.com/demos/demoapi";
+		const API_URL = "https://www.allbreedpedigree.com/peter+pan";
 
 		// The endpoint you want the CORS reverse proxy to be on
 		const PROXY_ENDPOINT = "/corsproxy/";
-
-		// The rest of this snippet for the demo page
-		function rawHtmlResponse(html) {
-			return new Response(html, {
-				headers: {
-					"content-type": "text/html;charset=UTF-8",
-				},
-			});
-		}
-
-		const DEMO_PAGE = `
-      <!DOCTYPE html>
-      <html>
-      <body>
-        <h1>API GET without CORS Proxy</h1>
-        <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#Checking_that_the_fetch_was_successful">Shows TypeError: Failed to fetch since CORS is misconfigured</a>
-        <p id="noproxy-status"/>
-        <code id="noproxy">Waiting</code>
-        <h1>API GET with CORS Proxy</h1>
-        <p id="proxy-status"/>
-        <code id="proxy">Waiting</code>
-        <h1>API POST with CORS Proxy + Preflight</h1>
-        <p id="proxypreflight-status"/>
-        <code id="proxypreflight">Waiting</code>
-        <script>
-        let reqs = {};
-        reqs.noproxy = () => {
-          return fetch("${API_URL}").then(r => r.json())
-        }
-        reqs.proxy = async () => {
-          let href = "${PROXY_ENDPOINT}?apiurl=${API_URL}"
-          return fetch(window.location.origin + href).then(r => r.json())
-        }
-        reqs.proxypreflight = async () => {
-          let href = "${PROXY_ENDPOINT}?apiurl=${API_URL}"
-          let response = await fetch(window.location.origin + href, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              msg: "Hello world!"
-            })
-          })
-          return response.json()
-        }
-        (async () => {
-        for (const [reqName, req] of Object.entries(reqs)) {
-          try {
-            let data = await req()
-            document.getElementById(reqName).textContent = JSON.stringify(data)
-          } catch (e) {
-            document.getElementById(reqName).textContent = e
-          }
-        }
-      })()
-        </script>
-      </body>
-      </html>
-    `;
 
 		async function handleRequest(request) {
 			const url = new URL(request.url);
@@ -143,8 +83,6 @@ export default {
 					statusText: "Method Not Allowed",
 				});
 			}
-		} else {
-			return rawHtmlResponse(DEMO_PAGE);
 		}
 	},
 } satisfies ExportedHandler;
